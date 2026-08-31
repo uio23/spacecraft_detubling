@@ -1,0 +1,10 @@
+[user]
+	name = "Alexander Kashpir"
+	email = "alexander@kashpir.com"
+	signingkey = ""
+[commit]
+	gpgsign = false
+[gpg]
+	format = openpgp
+[gpg "openpgp"]
+	program = ""
