@@ -4,8 +4,8 @@
 
 hold on
 
-q = quiver3(sat_data(:,1), sat_data(:,2), sat_data(:,3), sat_data(:,4), sat_data(:,5), sat_data(:,6));
-q.Color = "#D57E7E";
+q = plot3(simulation.X, simulation.Y, simulation.Z);
+q.Color = "#006199";
 
-title("Satellite orbit with measured magnetic field");
+title("Satellite in orbit, with planetary magnetic field");
 
