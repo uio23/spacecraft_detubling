@@ -1,17 +1,19 @@
 classdef Tests < matlab.unittest.TestCase
     properties
-        Tolerance = 10^-15;
+        Tolerance = 10^-6;
         Sat
-        N_Timestamps
+        Positions
+        Magnetic_sense
+        Simulation
     end
 
     methods (TestClassSetup)
         function createSatellite(testCase)
-            altitude = input("Enter altitude (in meters): ");
-            inclination = deg2rad(input("Enter inclination of the orbit (in deg): "));
-            testCase.N_Timestamps = input("How many timestamps would you like in the orbit? ");
-
-            testCase.Sat = Satellite(altitude, inclination);
+            simulation = evalin('base', 'simulation');
+            testCase.Positions = [simulation.X simulation.Y simulation.Z];
+            testCase.Magnetic_sense = [simulation.BX simulation.BY simulation.BZ];
+            testCase.Simulation = simulation;
+            testCase.Sat = evalin('base', 'sat');
         end
     end
 
@@ -36,25 +38,24 @@ classdef Tests < matlab.unittest.TestCase
             testCase.verifyEqual(ratio, 2, "B at poll is not double that at equator", AbsTol=testCase.Tolerance);
         end
         function orbit_periodicity(testCase)
-            t_0 = testCase.Sat.getPosition(0);
-            t_T = testCase.Sat.getPosition(testCase.Sat.Period);
+            t_0 = testCase.Positions(1,:);
+            t_T = testCase.Positions(end,:);
 
             testCase.verifyEqual(t_T, t_0, "Orbit not closed. Position at t=0 is not equal to position at t=T", AbsTol=testCase.Tolerance);
         end
         function magnetic_periodicity(testCase)
-            t_0 = testCase.Sat.senseB(testCase.Sat.getPosition(0), 0);
-            t_T = testCase.Sat.senseB(testCase.Sat.getPosition(testCase.Sat.Period), 0);
+            t_0 = testCase.Magnetic_sense(1,:);
+            t_T = testCase.Magnetic_sense(end,:);
 
             testCase.verifyEqual(t_T, t_0, "Orbit not closed. B field at t=0 is not equal to that at t=T", AbsTol=testCase.Tolerance);
         end
         function B_mag_stays_in_bounds(testCase)
             % B field weakest at equator
-            predicted_min = closedForm(testCase.Sat.R, pi/2);
+            predicted_min = closedForm(vecnorm(testCase.Sat.R0), pi/2);
             % Offset from equator by orbital inclination, downwards
-            predicted_max = closedForm(testCase.Sat.R, pi/2 - testCase.Sat.Inclination);
+            predicted_max = closedForm(vecnorm(testCase.Sat.R0), pi/2 - testCase.Sat.Inclination);
 
-            data = testCase.Sat.performOrbit(testCase.N_Timestamps, 0);
-            b_magnitudes = vecnorm(data(:,4:6), 2, 2);
+            b_magnitudes = vecnorm(testCase.Magnetic_sense, 2, 2);
             recorded_min = min(b_magnitudes);
             recorded_max = max(b_magnitudes);
 

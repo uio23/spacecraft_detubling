@@ -1,5 +1,5 @@
 function b = dipoleField(r, dipole_moment)
-% DIPLOTEFIELD Calculate magnetic field vector at given vector position
+% DIPLOTEFIELD Calculate magnetic field vector at given position
 %
 % @param r             Vector position to calculate magnetic field at
 % @param dipole_moment Dipole moment of relevant planet

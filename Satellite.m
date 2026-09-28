@@ -1,19 +1,19 @@
 classdef Satellite
     properties
-        R
         Inclination
         Mean_Motion
         Period
         Inertia_Tensor
         Q
         Angular_Velocity
-        Torque
+        T0
         R0
         V0
+        K
     end
 
     methods
-        function sat = Satellite(r0, v0, inertia_tensor, w0, t)
+        function sat = Satellite(r0, v0, inclination, inertia_tensor, w0, t0, k)
         % SATELLITE Create an instance of a satellite
         % 
         % @param altitude    Distance in meters from planet centre
@@ -25,13 +25,14 @@ classdef Satellite
 
             sat.R0 = r0;
             sat.V0 = v0;
+            sat.Inclination = inclination;
 
             sat.Inertia_Tensor = inertia_tensor;
             sat.Angular_Velocity = w0;
-            sat.Torque = t;
+            sat.T0 = t0;
+            sat.K = k;
 
-            sat.Mean_Motion = sqrt(Constants.gravitational_parameter / ...
-                                   norm(r0)^3);
+            sat.Mean_Motion = sqrt(Constants.gravitational_parameter / norm(r0)^3);
             sat.Period = 2*pi / sat.Mean_Motion;
             sat.Q = [1 0 0 0];
         end

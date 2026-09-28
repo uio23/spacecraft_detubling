@@ -5,9 +5,11 @@
 clearvars bfield_data
 
 
-polar_step = deg2rad(input("What polar step angle do you want (in deg)? "));
-azimuth_step = deg2rad(input("What azimuth step angle do you want (in deg)? "));
+% polar_step = deg2rad(input("What polar step angle do you want (in deg)? "));
+% azimuth_step = deg2rad(input("What azimuth step angle do you want (in deg)? "));
 
+polar_step = deg2rad(15);
+azimuth_step = deg2rad(30);
 
 polar_angles = 0:polar_step:2*pi;
 azimuthal_angles = 0:azimuth_step:2*pi;
